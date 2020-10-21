@@ -4,6 +4,11 @@ import requests
 import json
 import pickle
 
+
+def print_password():
+    print(f'Password: {pickle.load(open("outputs/password.pkl", "rb"))}')
+
+
 def get_password(cookie):
     alphabet_index = 0
     alphabet = string.ascii_letters

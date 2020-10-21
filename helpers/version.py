@@ -5,6 +5,10 @@ import pickle
 from res import URL
 
 
+def print_version():
+    print(f'Version: {pickle.load(open("outputs/version.pkl", "rb"))}')
+
+
 def get_version(cookie):
     headers = {
         'Cookie': cookie

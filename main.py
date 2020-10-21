@@ -1,11 +1,6 @@
-import json
-import string
-import itertools
-import requests
-import pickle
 import sys
 
-from helpers import version, test, usernames, tables, columns, password
+from helpers import version, usernames, tables, columns, password
 
 
 def menu():
@@ -14,15 +9,17 @@ def menu():
     print(f'hrpaul@iu.edu')
     print()
     print(f'Enter option number,')
-    print(f'1. Table Names')
-    print(f'2. Database Version')
-    print(f'3. Names of all columns contained in the table whose name starts with ‘CHALLENGE’')
-    print(f'4. All original usernames stored in the table whose name starts with ‘CHALLENGE’')
-    print(f'5. The password of user ‘tom’ stored in the table whose name starts with ‘CHALLENGE’.')
+    print(f'1. Retrieve Table Names')
+    print(f'2. Retrieve Database Version')
+    print(f'3. Retrieve names of all columns contained in the table whose name starts with ‘CHALLENGE’')
+    print(f'4. Retrieve all original usernames stored in the table whose name starts with ‘CHALLENGE’')
+    print(f'5. Retrieve the password of user ‘tom’ stored in the table whose name starts with ‘CHALLENGE’.')
     print(f'6. Print all tables')
-    print(f'7. Print all columns of the table CHALLENGE')
-    print(f'8. Print all usernames in the table CHALLENGE')
-    print(f'9. Exit')
+    print(f'7. Print database version')
+    print(f'8. Print all columns of the table CHALLENGE')
+    print(f'9. Print all usernames in the table CHALLENGE')
+    print(f'10. Print tom\'s password')
+    print(f'0. Exit')
     print()
 
 
@@ -31,7 +28,6 @@ def exit():
     sys.exit(0)
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     cookie = "JSESSIONID=_ZbQZICPMUeDulkvuTEokffIx-KsU91i0ZugU7DB"
 
@@ -39,7 +35,7 @@ if __name__ == '__main__':
         menu()
         try:
             option = int(input())
-            if option not in range(1, 10):
+            if option not in range(0, 11):
                 raise ValueError
             if option == 1:
                 tables.get_table_names(cookie)
@@ -54,10 +50,14 @@ if __name__ == '__main__':
             if option == 6:
                 tables.print_table_names()
             if option == 7:
-                columns.print_columns()
+                version.print_version()
             if option == 8:
-                usernames.print_usernames()
+                columns.print_columns()
             if option == 9:
+                usernames.print_usernames()
+            if option == 10:
+                password.print_password()
+            if option == 0:
                 exit()
 
         except ValueError:
