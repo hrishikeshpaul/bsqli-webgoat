@@ -1,6 +1,7 @@
 import string
 import requests
 import json
+import pickle
 from res import URL
 
 
@@ -37,6 +38,7 @@ def get_version(cookie):
         if "already exists please try to register with a different username" not in response['feedback']:
             digit_index += 1
             if digit_index > len(digits) - 1:
+                pickle.dump(version, open('outputs/version.pkl', 'wb'))
                 return version
         else:
             version += digits[digit_index]

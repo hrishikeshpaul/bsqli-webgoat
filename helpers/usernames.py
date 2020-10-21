@@ -1,10 +1,18 @@
 from helpers import inject
 import pickle
+import tabulate
 import string
 
 
 def print_usernames():
-    print(pickle.load(open('outputs/usernames.pkl.pkl'), 'rb'))
+    data = pickle.load(open('outputs/usernames.pkl', 'rb'))
+    row = []
+
+    for entry in data:
+        for (table_name, column_name), usernames in entry.items():
+            row.append([table_name, column_name,','.join(usernames)])
+
+    print(tabulate.tabulate(row, headers=["Table Name", "Column Name", "Usernames"]))
 
 
 def check_query(column_name, table_name, user_id):

@@ -1,10 +1,12 @@
 import string
 import pickle
 from helpers import inject
+import tabulate
 
 
 def print_table_names():
-    print(pickle.load(open('../outputs/tables.pkl'), 'rb'))
+    data = pickle.load(open('outputs/tables.pkl', 'rb'))
+    print(tabulate.tabulate([[row] for row in data], headers=["Table Names"]))
 
 
 def check_query(table_name):
