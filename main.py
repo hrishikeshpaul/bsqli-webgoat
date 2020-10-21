@@ -291,9 +291,8 @@ def exit():
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    cookie = ''
-    test.test()
-
+    cookie = "JSESSIONID=_ZbQZICPMUeDulkvuTEokffIx-KsU91i0ZugU7DB"
+    
     while 1:
         menu()
         try:

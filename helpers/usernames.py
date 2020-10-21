@@ -4,7 +4,7 @@ import string
 
 
 def print_usernames():
-    print(pickle.load(open('../outputs/usernames.pkl.pkl'), 'rb'))
+    print(pickle.load(open('outputs/usernames.pkl.pkl'), 'rb'))
 
 
 def check_query(column_name, table_name, user_id):

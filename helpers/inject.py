@@ -4,7 +4,7 @@ import json
 from res import URL
 
 
-def check(table_name, column_name="", user_id="", cookie="", query=""):
+def check(cookie="", query=""):
     headers = {
         'Cookie': cookie,
     }
