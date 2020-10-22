@@ -16,7 +16,7 @@ def check(cookie="", query=""):
         'confirm_password_reg': 'paul123'
     }
 
-    r = requests.put('http://172.17.0.2:8080/WebGoat/SqlInjectionAdvanced/challenge', headers=headers,
+    r = requests.put(URL, headers=headers,
                      data=data)
 
     try:
