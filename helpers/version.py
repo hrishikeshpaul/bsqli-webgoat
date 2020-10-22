@@ -10,9 +10,7 @@ def print_version():
 
 
 def get_version(cookie):
-    headers = {
-        'Cookie': cookie
-    }
+    headers = {'Cookie': cookie}
 
     digits = string.digits + '.'
     version = ''
@@ -29,7 +27,7 @@ def get_version(cookie):
             'username_reg': query,
             'email_reg': 'paul@gmail.com',
             'password_reg': 'paul123',
-            'confirm_password_reg': 'paul123'
+            'confirm_password_reg': 'paul123',
         }
 
         r = requests.put(URL, headers=headers, data=data)
@@ -41,7 +39,10 @@ def get_version(cookie):
             print("Invalid Cookie, find it by looking at your requests once logged in.")
             return False
 
-        if "already exists please try to register with a different username" not in response['feedback']:
+        if (
+            "already exists please try to register with a different username"
+            not in response['feedback']
+        ):
             digit_index += 1
             if digit_index > len(digits) - 1:
                 pickle.dump(version, open('outputs/version.pkl', 'wb'))

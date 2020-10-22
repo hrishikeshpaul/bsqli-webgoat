@@ -12,9 +12,15 @@ def menu():
     print(f'Enter option number,')
     print(f'1. Retrieve Table Names')
     print(f'2. Retrieve Database Version')
-    print(f'3. Retrieve names of all columns contained in the table whose name starts with ‘CHALLENGE’')
-    print(f'4. Retrieve all original usernames stored in the table whose name starts with ‘CHALLENGE’')
-    print(f'5. Retrieve the password of user ‘tom’ stored in the table whose name starts with ‘CHALLENGE’.')
+    print(
+        f'3. Retrieve names of all columns contained in the table whose name starts with ‘CHALLENGE’'
+    )
+    print(
+        f'4. Retrieve all original usernames stored in the table whose name starts with ‘CHALLENGE’'
+    )
+    print(
+        f'5. Retrieve the password of user ‘tom’ stored in the table whose name starts with ‘CHALLENGE’.'
+    )
     print(f'6. Print all tables')
     print(f'7. Print database version')
     print(f'8. Print all columns of the table CHALLENGE')
@@ -22,11 +28,6 @@ def menu():
     print(f'10. Print tom\'s password')
     print(f'0. Exit')
     print()
-
-
-def exit():
-    print(f'Thank you.')
-    sys.exit(0)
 
 
 if __name__ == '__main__':
@@ -70,7 +71,8 @@ if __name__ == '__main__':
             if option == 10:
                 password.print_password()
             if option == 0:
-                exit()
+                print(f'Thank you.')
+                sys.exit(0)
 
         except ValueError:
             print("Please enter values from 1-9 only.")

