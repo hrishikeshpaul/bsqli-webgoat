@@ -1,3 +1,4 @@
+import datetime
 import sys
 
 from helpers import version, usernames, tables, columns, password
@@ -30,6 +31,7 @@ def exit():
 
 if __name__ == '__main__':
     cookie = "JSESSIONID=_ZbQZICPMUeDulkvuTEokffIx-KsU91i0ZugU7DB"
+    start = end = datetime.datetime.now()
 
     while 1:
         menu()
@@ -38,15 +40,25 @@ if __name__ == '__main__':
             if option not in range(0, 11):
                 raise ValueError
             if option == 1:
+                start = datetime.datetime.now()
                 tables.get_table_names(cookie)
+                end = datetime.datetime.now()
             if option == 2:
+                start = datetime.datetime.now()
                 print(f'Version: {version.get_version(cookie)}')
+                end = datetime.datetime.now()
             if option == 3:
+                start = datetime.datetime.now()
                 columns.get_column_names(cookie)
+                end = datetime.datetime.now()
             if option == 4:
+                start = datetime.datetime.now()
                 usernames.get_usernames(cookie)
+                end = datetime.datetime.now()
             if option == 5:
+                start = datetime.datetime.now()
                 print(f'Password: {password.get_password(cookie)}')
+                end = datetime.datetime.now()
             if option == 6:
                 tables.print_table_names()
             if option == 7:
@@ -62,3 +74,5 @@ if __name__ == '__main__':
 
         except ValueError:
             print("Please enter values from 1-9 only.")
+
+        print(f'Total Time: {(end - start).total_seconds()}s')

