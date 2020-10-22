@@ -49,4 +49,5 @@ def get_table_names(cookie):
             tables.append(table_name)
 
     print(tables)
+    print(f'No of queries: {no_of_queries}')
     pickle.dump(tables, open('outputs/tables.pkl', 'wb'))

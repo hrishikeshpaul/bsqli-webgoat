@@ -66,5 +66,7 @@ def get_usernames(cookie):
                     usernames.append(username_dict)
                     print(usernames)
                     pickle.dump(usernames, open('outputs/usernames.pkl', 'wb'))
+                else:
+                    print(f'None of the keywords match for table name {table_name}. Please manually check for the username column name.')
 
     print(f'No of queries: {no_of_queries}')
