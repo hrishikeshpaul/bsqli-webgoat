@@ -9,4 +9,4 @@ $ cd bsqli-webgoat
 $ python3 main.py
 ```
 
-For an extensive report please see, 
+For an extensive report please see the [report](https://github.com/hrishikeshpaul/bsqli-webgoat/blob/master/assets/CDC_Assignment_1.pdf).
