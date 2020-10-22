@@ -31,6 +31,7 @@ def menu():
 
 
 if __name__ == '__main__':
+
     cookie = "JSESSIONID=_ZbQZICPMUeDulkvuTEokffIx-KsU91i0ZugU7DB"
     start = end = datetime.datetime.now()
 
@@ -71,7 +72,8 @@ if __name__ == '__main__':
             if option == 10:
                 password.print_password()
             if option == 0:
-                print(f'Thank you.')
+                print(f'Thank you')
+                print(f'- Hrishikesh Paul (hrpaul@iu.edu)')
                 sys.exit(0)
 
         except ValueError:

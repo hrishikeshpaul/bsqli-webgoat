@@ -4,7 +4,15 @@ import json
 from res import URL
 
 
-def check(cookie="", query=""):
+def check(cookie="", query="") -> bool:
+    """
+    This checks the validity of the possible candidate names.
+
+    :param cookie: Session cookie required by the header
+    :param query: Query to inject
+    :return: Boolean value to denote the injected value's validity
+    """
+
     headers = {
         'Cookie': cookie,
     }
@@ -26,15 +34,22 @@ def check(cookie="", query=""):
         return False
 
     if (
-        "already exists please try to register with a different username"
-        not in response['feedback']
+            "already exists please try to register with a different username"
+            not in response['feedback']
     ):
         return False
     else:
         return True
 
 
-def inject(cookie="", query=""):
+def inject(cookie="", query="") -> bool:
+    """
+    This checks if the alphabet added to the sequence is valid.
+
+    :param cookie: Session cookie required by the header
+    :param query: Query to inject
+    :return: Boolean value to denote the injected value's validity
+    """
     headers = {
         'Cookie': cookie,
     }
@@ -56,8 +71,8 @@ def inject(cookie="", query=""):
         return False
 
     if (
-        "already exists please try to register with a different username"
-        not in response['feedback']
+            "already exists please try to register with a different username"
+            not in response['feedback']
     ):
         return False
     else:
