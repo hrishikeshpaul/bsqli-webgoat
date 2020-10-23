@@ -54,7 +54,8 @@ def builder_query(column_name: str, table_name: str, length: int, word: str) -> 
 def get_usernames(cookie: str) -> None:
     """
     Retrieves the usernames via backtracking from the USERID field from tables that
-    have names starting with CHALLENGE.
+    have names starting with CHALLENGE. The algorithm skips all the usernames that were created during
+    the injection process as characters like slashes(/) or quotes(') are not included in the character set.
 
     Saves the program state while iterating and the output as a list of
     dict<(table_name, column_name), list(username)>
