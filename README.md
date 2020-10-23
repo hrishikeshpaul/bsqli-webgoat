@@ -18,6 +18,7 @@ $ python3 main.py
 > typing `document.cookie()` in the web inspector having logged into WebGoat.
 
 **Python Libraries**
+
 Below are a list of python libraries that were used and how you can get them,
 
 1. pickle (for object serialization): `pip install pickle`
