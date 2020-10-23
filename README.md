@@ -14,8 +14,8 @@ $ cd bsqli-webgoat
 $ python3 main.py
 ```
 
-> Please make sure to update the `cookie` in the `main()` function. This can be done by 
-> typing `document.cookie()` in the web inspector having logged into WebGoat.
+**Note:** Please make sure to update the `cookie` in the `main()` function. This can be done by 
+typing `document.cookie()` in the web inspector having logged into WebGoat.
 
 **Python Libraries**
 
